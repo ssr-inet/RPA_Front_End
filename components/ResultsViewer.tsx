@@ -16,7 +16,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import * as XLSX from 'xlsx';
 import { memo, useEffect, useState } from "react";
-import { LockIcon, X } from "lucide-react";
+import { FileSpreadsheet, LockIcon, X } from "lucide-react";
 import toast from "react-hot-toast";
 import { saveAs } from 'file-saver';
 
@@ -125,15 +125,18 @@ export const ResultsViewer = memo(({ responseData }: ResultsViewerProps) => {
         <div className="space-y-6 w-full max-w-6xl">
             <Card>
                 <CardHeader className="flex flex-row items-center justify-between flex-wrap gap-2">
-                    <CardTitle>Grand Total: {Total_success_count + Total_failed_count + combinedData.length}</CardTitle>
-                    <CardTitle>Total Success: {Total_success_count}</CardTitle>
-                    <CardTitle>Total Failed: {Total_failed_count}</CardTitle>
-                    <CardTitle>Combined Data Count: {combinedData.length}</CardTitle>
+                    <CardTitle className="font-bold text-xl">TOTAL : {Total_success_count + Total_failed_count + combinedData.length}</CardTitle>
+                    <CardTitle className="font-bold text-green-600">Total Success : {Total_success_count}</CardTitle>
+                    <CardTitle className="font-bold text-red-600">Total Failed : {Total_failed_count}</CardTitle>
+                    <CardTitle className="font-bold text-orange-600">Combined Data Count : {combinedData.length}</CardTitle>
                     {combinedData.length > 0 && (
+
                         <Button
                             onClick={() => exportToExcel(combinedData, 'combined_data')}
                             variant="outline"
+                            className="flex items-center gap-2"
                         >
+                            <FileSpreadsheet className="w-4 h-4 text-green-600" />
                             Export Combined Data to Excel
                         </Button>
                     )}
@@ -142,11 +145,13 @@ export const ResultsViewer = memo(({ responseData }: ResultsViewerProps) => {
 
             <Card>
                 <CardHeader className="flex flex-row items-center justify-between">
-                    <CardTitle>Detailed Results</CardTitle>
+                    <CardTitle className="font-bold text-xl">DETAILED RESULTS</CardTitle>
                     {activeSections.length > 0 && (
-                        <Button onClick={exportAllTabsToExcel} variant="outline">
+                        <Button onClick={exportAllTabsToExcel} variant="outline" className="flex items-center  gap-2">
+                            <FileSpreadsheet className="h-4 w-4 text-green-600" />
                             Export All Tabs
                         </Button>
+
                     )}
                 </CardHeader>
                 <CardContent>
@@ -157,9 +162,13 @@ export const ResultsViewer = memo(({ responseData }: ResultsViewerProps) => {
                     ) : (
                         <Tabs defaultValue={activeSections[0]?.key || ''} className="w-full">
                             <div className="overflow-x-auto pb-2">
-                                <TabsList className="flex w-full justify-start">
+                                <TabsList className="flex w-full justify-start bg-[#1c9eda] rounded-md p-1">
                                     {activeSections.map((section) => (
-                                        <TabsTrigger key={section.key} value={section.key}>
+                                        <TabsTrigger
+                                            key={section.key}
+                                            value={section.key}
+                                            className="text-white px-4 py-2 rounded-md hover:bg-[#1580b5] data-[state=active]:bg-white data-[state=active]:text-[#1c9eda] transition-colors"
+                                        >
                                             {section.label}
                                         </TabsTrigger>
                                     ))}
@@ -185,16 +194,16 @@ export const ResultsViewer = memo(({ responseData }: ResultsViewerProps) => {
                                     <TabsContent key={section.key} value={section.key} className="pt-4">
                                         <Card>
                                             <CardHeader className="flex flex-row items-center justify-between">
-                                                <CardTitle>{section.label}</CardTitle>
-                                                <span>Total count: {data.length}</span>
+                                                <CardTitle className="font-bold text-xl">{section.label}</CardTitle>
+                                                <span className="font-bold">Total count: {data.length}</span>
                                             </CardHeader>
                                             <CardContent>
                                                 <div className="overflow-x-auto">
                                                     <Table>
-                                                        <TableHeader>
-                                                            <TableRow>
+                                                        <TableHeader className="bg-[#0097eb]">
+                                                            <TableRow >
                                                                 {orderedColumns.map((column) => (
-                                                                    <TableHead key={column}>
+                                                                    <TableHead key={column} className="font-bold text-white hover:text-white hover:bg-[#0097eb]">
                                                                         {column.replace(/_/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase())}
                                                                     </TableHead>
                                                                 ))}
